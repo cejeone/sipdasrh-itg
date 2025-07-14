@@ -1,0 +1,35 @@
+
+entity Spas {
+	namaSpas String
+  namaManufaktur String
+  tipeSpas Integer
+}
+
+entity SpasArrInstall {
+	namaInstalasi String
+  urlInstalasi String
+  latInstalasi Double
+  longInstalasi Double
+  thresholdInstalasi Double
+  urlEwsGis String
+}
+
+entity SpasArrLog {
+	timeLog ZonedDateTime
+  timeRetrieve ZonedDateTime
+  logValue String
+}
+
+
+relationship ManyToOne {
+	SpasArrInstall{spas} to Spas{install}
+}
+
+relationship OneToMany {
+	SpasArrInstall{log} to SpasArrLog
+}
+
+paginate Spas, SpasArrInstall with pagination
+dto * with mapstruct
+service all with serviceImpl
+filter *
