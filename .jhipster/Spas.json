@@ -1,0 +1,38 @@
+{
+  "annotations": {
+    "changelogDate": "20250714102919"
+  },
+  "applications": "*",
+  "clientRootFolder": "serviceAwas",
+  "databaseType": "sql",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "namaSpas",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "namaManufaktur",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tipeSpas",
+      "fieldType": "Integer"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "microserviceName": "serviceAwas",
+  "name": "Spas",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "spasArrInstall",
+      "otherEntityRelationshipName": "spas",
+      "relationshipName": "install",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

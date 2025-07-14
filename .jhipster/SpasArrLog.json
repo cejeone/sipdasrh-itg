@@ -1,0 +1,29 @@
+{
+  "annotations": {
+    "changelogDate": "20250714102921"
+  },
+  "applications": "*",
+  "clientRootFolder": "serviceAwas",
+  "databaseType": "sql",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "timeLog",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "timeRetrieve",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "logValue",
+      "fieldType": "String"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "microserviceName": "serviceAwas",
+  "name": "SpasArrLog",
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}
