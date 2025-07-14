@@ -1,0 +1,4 @@
+org.springframework.test.context.ContextCustomizerFactory = \
+    com.sipdasrh.awas.config.\
+    SqlTestContainersSpringContextCustomizerFactory,com.sipdasrh.awas.config.\
+    RedisTestContainersSpringContextCustomizerFactory

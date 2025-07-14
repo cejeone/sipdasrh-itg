@@ -1,0 +1,33 @@
+{
+  "generator-jhipster": {
+    "applicationType": "microservice",
+    "authenticationType": "jwt",
+    "baseName": "serviceAwas",
+    "buildTool": "maven",
+    "cacheProvider": "redis",
+    "clientFramework": "no",
+    "clientTestFrameworks": null,
+    "clientTheme": null,
+    "creationTimestamp": 1752488129346,
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "enableHibernateCache": true,
+    "enableTranslation": false,
+    "entities": [],
+    "feignClient": true,
+    "jhipsterVersion": "8.11.0",
+    "jwtSecretKey": "MTczYzg0NTgzZjYxMmYyZTU2NzU4MzBjY2I5MDdlMTlhMDc4Y2I4NThiMzM0OGVhOWQ0NzZmNTc3MmYwNDJhNzgwZmE2ZTMzMWZhOWUxZDViZWRjZmRmNmEwZDYzMjA5NGRiOTZlMjFjMjM4OGE4ZWFjYjdjNTgwNGRiMWJiYjg=",
+    "microfrontend": null,
+    "microfrontends": [],
+    "nativeLanguage": "en",
+    "packageName": "com.sipdasrh.awas",
+    "prodDatabaseType": "postgresql",
+    "reactive": false,
+    "serverPort": "8188",
+    "serviceDiscoveryType": "consul",
+    "skipClient": true,
+    "syncUserWithIdp": null,
+    "testFrameworks": [],
+    "withAdminUi": null
+  }
+}
