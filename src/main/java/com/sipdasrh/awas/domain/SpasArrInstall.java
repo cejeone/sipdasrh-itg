@@ -41,7 +41,7 @@ public class SpasArrInstall implements Serializable {
     private Double thresholdInstalasi;
 
     @Column(name = "url_ews_gis")
-    private String urlEwsGis;
+    private Integer urlEwsGis;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "spasArrInstall")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -132,16 +132,16 @@ public class SpasArrInstall implements Serializable {
         this.thresholdInstalasi = thresholdInstalasi;
     }
 
-    public String getUrlEwsGis() {
+    public Integer getUrlEwsGis() {
         return this.urlEwsGis;
     }
 
-    public SpasArrInstall urlEwsGis(String urlEwsGis) {
+    public SpasArrInstall urlEwsGis(Integer urlEwsGis) {
         this.setUrlEwsGis(urlEwsGis);
         return this;
     }
 
-    public void setUrlEwsGis(String urlEwsGis) {
+    public void setUrlEwsGis(Integer urlEwsGis) {
         this.urlEwsGis = urlEwsGis;
     }
 
@@ -218,7 +218,7 @@ public class SpasArrInstall implements Serializable {
             ", latInstalasi=" + getLatInstalasi() +
             ", longInstalasi=" + getLongInstalasi() +
             ", thresholdInstalasi=" + getThresholdInstalasi() +
-            ", urlEwsGis='" + getUrlEwsGis() + "'" +
+            ", urlEwsGis=" + getUrlEwsGis() +
             "}";
     }
 }

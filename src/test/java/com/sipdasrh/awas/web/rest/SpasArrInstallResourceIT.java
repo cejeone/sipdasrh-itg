@@ -53,8 +53,9 @@ class SpasArrInstallResourceIT {
     private static final Double UPDATED_THRESHOLD_INSTALASI = 2D;
     private static final Double SMALLER_THRESHOLD_INSTALASI = 1D - 1D;
 
-    private static final String DEFAULT_URL_EWS_GIS = "AAAAAAAAAA";
-    private static final String UPDATED_URL_EWS_GIS = "BBBBBBBBBB";
+    private static final Integer DEFAULT_URL_EWS_GIS = 1;
+    private static final Integer UPDATED_URL_EWS_GIS = 2;
+    private static final Integer SMALLER_URL_EWS_GIS = 1 - 1;
 
     private static final String ENTITY_API_URL = "/api/spas-arr-installs";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -628,25 +629,48 @@ class SpasArrInstallResourceIT {
 
     @Test
     @Transactional
-    void getAllSpasArrInstallsByUrlEwsGisContainsSomething() throws Exception {
+    void getAllSpasArrInstallsByUrlEwsGisIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         insertedSpasArrInstall = spasArrInstallRepository.saveAndFlush(spasArrInstall);
 
-        // Get all the spasArrInstallList where urlEwsGis contains
-        defaultSpasArrInstallFiltering("urlEwsGis.contains=" + DEFAULT_URL_EWS_GIS, "urlEwsGis.contains=" + UPDATED_URL_EWS_GIS);
+        // Get all the spasArrInstallList where urlEwsGis is greater than or equal to
+        defaultSpasArrInstallFiltering(
+            "urlEwsGis.greaterThanOrEqual=" + DEFAULT_URL_EWS_GIS,
+            "urlEwsGis.greaterThanOrEqual=" + UPDATED_URL_EWS_GIS
+        );
     }
 
     @Test
     @Transactional
-    void getAllSpasArrInstallsByUrlEwsGisNotContainsSomething() throws Exception {
+    void getAllSpasArrInstallsByUrlEwsGisIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         insertedSpasArrInstall = spasArrInstallRepository.saveAndFlush(spasArrInstall);
 
-        // Get all the spasArrInstallList where urlEwsGis does not contain
+        // Get all the spasArrInstallList where urlEwsGis is less than or equal to
         defaultSpasArrInstallFiltering(
-            "urlEwsGis.doesNotContain=" + UPDATED_URL_EWS_GIS,
-            "urlEwsGis.doesNotContain=" + DEFAULT_URL_EWS_GIS
+            "urlEwsGis.lessThanOrEqual=" + DEFAULT_URL_EWS_GIS,
+            "urlEwsGis.lessThanOrEqual=" + SMALLER_URL_EWS_GIS
         );
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrInstallsByUrlEwsGisIsLessThanSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrInstall = spasArrInstallRepository.saveAndFlush(spasArrInstall);
+
+        // Get all the spasArrInstallList where urlEwsGis is less than
+        defaultSpasArrInstallFiltering("urlEwsGis.lessThan=" + UPDATED_URL_EWS_GIS, "urlEwsGis.lessThan=" + DEFAULT_URL_EWS_GIS);
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrInstallsByUrlEwsGisIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrInstall = spasArrInstallRepository.saveAndFlush(spasArrInstall);
+
+        // Get all the spasArrInstallList where urlEwsGis is greater than
+        defaultSpasArrInstallFiltering("urlEwsGis.greaterThan=" + SMALLER_URL_EWS_GIS, "urlEwsGis.greaterThan=" + DEFAULT_URL_EWS_GIS);
     }
 
     @Test

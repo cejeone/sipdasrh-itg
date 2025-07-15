@@ -34,7 +34,7 @@ public class SpasArrInstallCriteria implements Serializable, Criteria {
 
     private DoubleFilter thresholdInstalasi;
 
-    private StringFilter urlEwsGis;
+    private IntegerFilter urlEwsGis;
 
     private LongFilter logId;
 
@@ -51,7 +51,7 @@ public class SpasArrInstallCriteria implements Serializable, Criteria {
         this.latInstalasi = other.optionalLatInstalasi().map(DoubleFilter::copy).orElse(null);
         this.longInstalasi = other.optionalLongInstalasi().map(DoubleFilter::copy).orElse(null);
         this.thresholdInstalasi = other.optionalThresholdInstalasi().map(DoubleFilter::copy).orElse(null);
-        this.urlEwsGis = other.optionalUrlEwsGis().map(StringFilter::copy).orElse(null);
+        this.urlEwsGis = other.optionalUrlEwsGis().map(IntegerFilter::copy).orElse(null);
         this.logId = other.optionalLogId().map(LongFilter::copy).orElse(null);
         this.spasId = other.optionalSpasId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
@@ -176,22 +176,22 @@ public class SpasArrInstallCriteria implements Serializable, Criteria {
         this.thresholdInstalasi = thresholdInstalasi;
     }
 
-    public StringFilter getUrlEwsGis() {
+    public IntegerFilter getUrlEwsGis() {
         return urlEwsGis;
     }
 
-    public Optional<StringFilter> optionalUrlEwsGis() {
+    public Optional<IntegerFilter> optionalUrlEwsGis() {
         return Optional.ofNullable(urlEwsGis);
     }
 
-    public StringFilter urlEwsGis() {
+    public IntegerFilter urlEwsGis() {
         if (urlEwsGis == null) {
-            setUrlEwsGis(new StringFilter());
+            setUrlEwsGis(new IntegerFilter());
         }
         return urlEwsGis;
     }
 
-    public void setUrlEwsGis(StringFilter urlEwsGis) {
+    public void setUrlEwsGis(IntegerFilter urlEwsGis) {
         this.urlEwsGis = urlEwsGis;
     }
 

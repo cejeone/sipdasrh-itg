@@ -21,7 +21,7 @@ public class SpasArrInstallDTO implements Serializable {
 
     private Double thresholdInstalasi;
 
-    private String urlEwsGis;
+    private Integer urlEwsGis;
 
     private SpasDTO spas;
 
@@ -73,11 +73,11 @@ public class SpasArrInstallDTO implements Serializable {
         this.thresholdInstalasi = thresholdInstalasi;
     }
 
-    public String getUrlEwsGis() {
+    public Integer getUrlEwsGis() {
         return urlEwsGis;
     }
 
-    public void setUrlEwsGis(String urlEwsGis) {
+    public void setUrlEwsGis(Integer urlEwsGis) {
         this.urlEwsGis = urlEwsGis;
     }
 
@@ -120,7 +120,7 @@ public class SpasArrInstallDTO implements Serializable {
             ", latInstalasi=" + getLatInstalasi() +
             ", longInstalasi=" + getLongInstalasi() +
             ", thresholdInstalasi=" + getThresholdInstalasi() +
-            ", urlEwsGis='" + getUrlEwsGis() + "'" +
+            ", urlEwsGis=" + getUrlEwsGis() +
             ", spas=" + getSpas() +
             "}";
     }

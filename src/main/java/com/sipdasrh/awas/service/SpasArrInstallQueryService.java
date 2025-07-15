@@ -79,7 +79,7 @@ public class SpasArrInstallQueryService extends QueryService<SpasArrInstall> {
                 buildRangeSpecification(criteria.getLatInstalasi(), SpasArrInstall_.latInstalasi),
                 buildRangeSpecification(criteria.getLongInstalasi(), SpasArrInstall_.longInstalasi),
                 buildRangeSpecification(criteria.getThresholdInstalasi(), SpasArrInstall_.thresholdInstalasi),
-                buildStringSpecification(criteria.getUrlEwsGis(), SpasArrInstall_.urlEwsGis),
+                buildRangeSpecification(criteria.getUrlEwsGis(), SpasArrInstall_.urlEwsGis),
                 buildSpecification(criteria.getLogId(), root -> root.join(SpasArrInstall_.logs, JoinType.LEFT).get(SpasArrLog_.id)),
                 buildSpecification(criteria.getSpasId(), root -> root.join(SpasArrInstall_.spas, JoinType.LEFT).get(Spas_.id))
             );

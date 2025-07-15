@@ -29,7 +29,7 @@
             <column name="threshold_instalasi" type="double">
                 <constraints nullable="true" />
             </column>
-            <column name="url_ews_gis" type="varchar(255)">
+            <column name="url_ews_gis" type="integer">
                 <constraints nullable="true" />
             </column>
             <column name="spas_id" type="bigint">
@@ -61,7 +61,7 @@
             <column name="lat_instalasi" type="numeric"/>
             <column name="long_instalasi" type="numeric"/>
             <column name="threshold_instalasi" type="numeric"/>
-            <column name="url_ews_gis" type="string"/>
+            <column name="url_ews_gis" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

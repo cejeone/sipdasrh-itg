@@ -29,7 +29,7 @@
     },
     {
       "fieldName": "urlEwsGis",
-      "fieldType": "String"
+      "fieldType": "Integer"
     }
   ],
   "jpaMetamodelFiltering": true,
