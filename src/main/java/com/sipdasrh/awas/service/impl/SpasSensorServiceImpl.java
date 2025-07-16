@@ -6,7 +6,15 @@ import com.sipdasrh.awas.domain.SpasArrLog;
 import com.sipdasrh.awas.repository.SpasArrInstallRepository;
 import com.sipdasrh.awas.repository.SpasArrLogRepository;
 import com.sipdasrh.awas.service.SpasSensorService;
-
+import java.security.cert.X509Certificate;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import javax.net.ssl.*;
+import javax.net.ssl.X509TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import javax.net.ssl.*;
-import javax.net.ssl.X509TrustManager;
-import java.security.cert.X509Certificate;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class SpasSensorServiceImpl implements SpasSensorService {
@@ -39,9 +37,11 @@ public class SpasSensorServiceImpl implements SpasSensorService {
     private final SpasArrLogRepository spasArrLogRepository;
     private final ApplicationProperties applicationProperties;
 
-    public SpasSensorServiceImpl(SpasArrInstallRepository spasArrInstallRepository,
-                                 SpasArrLogRepository spasArrLogRepository,
-                                 ApplicationProperties applicationProperties) {
+    public SpasSensorServiceImpl(
+        SpasArrInstallRepository spasArrInstallRepository,
+        SpasArrLogRepository spasArrLogRepository,
+        ApplicationProperties applicationProperties
+    ) {
         this.spasArrInstallRepository = spasArrInstallRepository;
         this.spasArrLogRepository = spasArrLogRepository;
         this.applicationProperties = applicationProperties;
@@ -49,33 +49,64 @@ public class SpasSensorServiceImpl implements SpasSensorService {
 
     @Override
     public void getDataFromSensors() {
-        LOG.info("Get Data From Sensors API : Start at {}", LocalDate.now());
-        List<SpasArrInstall> spasArrLogList = spasArrInstallRepository.findAll();
-        spasArrLogList.forEach(spasArrLog -> {
-            LOG.info("Get Data From Sensors API : Sensor {}", spasArrLog.getNamaInstalasi());
-            String res = restTemplate.getForObject(spasArrLog.getUrlInstalasi(), String.class);
-            JsonParser springParser = JsonParserFactory.getJsonParser();
-            Map<String, Object> mapResult = springParser.parseMap(res);
-            if (mapResult.get("statusCode").equals(200)) {
-                LOG.info("Extract Data From Sensors API : {}", spasArrLog.getNamaInstalasi());
-                Map<String, Object> sensorData = (Map<String, Object>) mapResult.get("data");
-                String lastSending = sensorData.get("last_sending").toString();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC);
-                ZonedDateTime localizedDate = ZonedDateTime.parse(lastSending, formatter);
+        try {
+            LOG.info("Get Data From Sensors API : Start at {}", LocalDate.now());
+            List<SpasArrInstall> spasArrLogList = spasArrInstallRepository.findAll();
 
-                Map<String, Object> sensorDetail = (Map<String, Object>) sensorData.get("sensor");
-                Map<String, Object> waterLevel = (Map<String, Object>) sensorDetail.get("Water Level");
-                Integer waterLevelInteger = (Integer) waterLevel.get("value_actual");
-                String waterLevelUnit = waterLevel.get("unit").toString();
-                SpasArrLog newData = new SpasArrLog()
-                    .logValue(sensorDetail.toString())
-                    .timeLog(localizedDate)
-                    .timeRetrieve(ZonedDateTime.now())
-                    .spasArrInstall(spasArrLog);
-                spasArrLogRepository.saveAndFlush(newData);
-            }
-        });
-        LOG.info("Get Data From Sensors API : End at {}", LocalDate.now());
+            String arcgisToken = getAccessTokenFromGis();
+            spasArrLogList.forEach(spasArrLog -> {
+                LOG.info("Get Data From Sensors API : Sensor {}", spasArrLog.getNamaInstalasi());
+                String res = restTemplate.getForObject(spasArrLog.getUrlInstalasi(), String.class);
+                JsonParser springParser = JsonParserFactory.getJsonParser();
+                Map<String, Object> mapResult = springParser.parseMap(res);
+                if (mapResult.get("statusCode").equals(200)) {
+                    LOG.info("Extract Data From Sensors API : {}", spasArrLog.getNamaInstalasi());
+                    Map<String, Object> sensorData = (Map<String, Object>) mapResult.get("data");
+                    String lastSending = sensorData.get("last_sending").toString();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC);
+                    ZonedDateTime localizedDate = ZonedDateTime.parse(lastSending, formatter);
+                    // Start Parsing JSON from IoT
+                    Map<String, Object> sensorDetail = (Map<String, Object>) sensorData.get("sensor");
+                    Map<String, Object> waterLevel = (Map<String, Object>) sensorDetail.get("Water Level");
+                    Integer waterLevelInteger = (Integer) waterLevel.get("value_actual");
+                    //                        String waterLevelUnit = waterLevel.get("unit").toString();
+
+                    Map<String, Object> batteryDetail = (Map<String, Object>) sensorData.get("Battery");
+                    Integer batteryLevelInteger = (Integer) batteryDetail.get("value_actual");
+                    //                        String batteryLevelUnit = waterLevel.get("unit").toString();
+
+                    Map<String, Object> railDetail = (Map<String, Object>) sensorData.get("Rainfall");
+                    Integer rainLevelInteger = (Integer) batteryDetail.get("value_actual");
+                    //                        String rainLevelUnit = waterLevel.get("unit").toString();
+                    // End Parsing
+                    SpasArrLog newData = new SpasArrLog()
+                        .logValue(sensorDetail.toString())
+                        .timeLog(localizedDate)
+                        .timeRetrieve(ZonedDateTime.now())
+                        .spasArrInstall(spasArrLog);
+                    spasArrLogRepository.saveAndFlush(newData);
+
+                    // Sync to Gis Service
+                    try {
+                        Boolean isSynced = postToServiceGis(
+                            spasArrLog.getUrlEwsGis(),
+                            (double) waterLevelInteger,
+                            (double) batteryLevelInteger,
+                            spasArrLog.getThresholdInstalasi(),
+                            (double) rainLevelInteger,
+                            arcgisToken
+                        );
+                        if (isSynced) LOG.info("Successfully Synced to GIS Service : ObjectID={}", spasArrLog.getUrlEwsGis());
+                    } catch (Exception e) {
+                        LOG.error("Error Synced To GIS Service : {}", e.getMessage());
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+            LOG.info("Get Data From Sensors API : End at {}", LocalDate.now());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -94,7 +125,7 @@ public class SpasSensorServiceImpl implements SpasSensorService {
         configureTrustAllSSL();
 
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(baseGisUrlToken, request, String.class);
-        if(responseEntity.getStatusCode().is2xxSuccessful()) {
+        if (responseEntity.getStatusCode().is2xxSuccessful()) {
             LOG.info("GIS Token Retrieved Successfully: {}", responseEntity.getBody());
             JsonParser springParser = JsonParserFactory.getJsonParser();
             Map<String, Object> mapResult = springParser.parseMap(responseEntity.getBody());
@@ -104,8 +135,28 @@ public class SpasSensorServiceImpl implements SpasSensorService {
     }
 
     @Override
-    public Boolean postToServiceGis(int objectId, Double ketinggian, Double voltBattery, Double thresHold, String token) {
-        return null;
+    public Boolean postToServiceGis(int objectId, Double ketinggian, Double voltBattery, Double thresHold, Double curahHujan, String token)
+        throws Exception {
+        LOG.info("Starting Post to GIS : {}", applicationProperties.getExternalGis().getUrlService());
+        String baseGisUrlService = applicationProperties.getExternalGis().getUrlService();
+        //Set Header Authorization and Form Payload
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setBearerAuth(token);
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        String postBody = formatPostRequest(objectId, ketinggian, voltBattery, thresHold, curahHujan);
+        body.add("features", "");
+        body.add("f", "pjson");
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+
+        // TODO: remove it in prod -> configureTrusAllSSL()
+        configureTrustAllSSL();
+        ResponseEntity<String> res = restTemplate.postForEntity(baseGisUrlService, request, String.class);
+        if (res.getStatusCode().is2xxSuccessful()) {
+            LOG.info("Succesfully POST to GIS : {}", res.getBody());
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -114,21 +165,23 @@ public class SpasSensorServiceImpl implements SpasSensorService {
      * WARNING: This approach is insecure for production use.
      */
     private static void configureTrustAllSSL() throws Exception {
-        TrustManager[] trustAllCerts = new TrustManager[]{
+        TrustManager[] trustAllCerts = new TrustManager[] {
             new X509TrustManager() {
                 @Override
                 public X509Certificate[] getAcceptedIssuers() {
                     return null;
                 }
+
                 @Override
                 public void checkClientTrusted(X509Certificate[] certs, String authType) {
                     // Do nothing - trust all clients
                 }
+
                 @Override
                 public void checkServerTrusted(X509Certificate[] certs, String authType) {
                     // Do nothing - trust all servers
                 }
-            }
+            },
         };
 
         SSLContext sc = SSLContext.getInstance("SSL");
@@ -138,4 +191,45 @@ public class SpasSensorServiceImpl implements SpasSensorService {
         HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
     }
 
+    /**
+     * Private function to generate format of payload that accepted by arcgis service
+     * @param objectId
+     * @param ketinggian
+     * @param voltBattery
+     * @param thresHold
+     * @param curahHujan
+     * @return
+     */
+    private static String formatPostRequest(int objectId, Double ketinggian, Double voltBattery, Double thresHold, Double curahHujan) {
+        //[{"attributes": {"objectid": 2,"status" : "normal"},}]
+        String currentStatus = determineCurrentStatus(ketinggian, thresHold);
+        StringBuffer stringBuffer = new StringBuffer("[{\"attributes\":{\"objectid\":");
+        stringBuffer
+            .append(objectId)
+            .append(',')
+            .append(",\"status\":")
+            .append(currentStatus)
+            .append(",\"ketinggian\":")
+            .append(ketinggian)
+            .append(",\"battery\":")
+            .append(voltBattery)
+            .append(",\"curah_huja\":")
+            .append(curahHujan)
+            .append("},}]");
+        return ("");
+    }
+
+    /**
+     * Function to determine 'Status' Of Each Observable DAS area
+     * @param ketinggian
+     * @param threshold
+     * @return
+     */
+    private static String determineCurrentStatus(Double ketinggian, Double threshold) {
+        if (threshold - ketinggian > 10) return "normal";
+        if ((threshold - ketinggian <= 10) && (threshold - ketinggian >= 5)) return "awas";
+        if (threshold - ketinggian < 5) return "banjir";
+
+        return "tidak terdeteksi";
+    }
 }
