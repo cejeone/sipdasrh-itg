@@ -23,6 +23,15 @@
             <column name="log_value" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="water_level" type="double">
+                <constraints nullable="true" />
+            </column>
+            <column name="battery_level" type="double">
+                <constraints nullable="true" />
+            </column>
+            <column name="rain_level" type="double">
+                <constraints nullable="true" />
+            </column>
             <column name="spas_arr_install_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -52,6 +61,9 @@
             <column name="time_log" type="date"/>
             <column name="time_retrieve" type="date"/>
             <column name="log_value" type="string"/>
+            <column name="water_level" type="numeric"/>
+            <column name="battery_level" type="numeric"/>
+            <column name="rain_level" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

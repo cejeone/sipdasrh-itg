@@ -18,6 +18,18 @@
     {
       "fieldName": "logValue",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "waterLevel",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "batteryLevel",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "rainLevel",
+      "fieldType": "Double"
     }
   ],
   "jpaMetamodelFiltering": true,

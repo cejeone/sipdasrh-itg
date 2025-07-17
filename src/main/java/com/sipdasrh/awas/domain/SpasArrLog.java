@@ -33,6 +33,15 @@ public class SpasArrLog implements Serializable {
     @Column(name = "log_value")
     private String logValue;
 
+    @Column(name = "water_level")
+    private Double waterLevel;
+
+    @Column(name = "battery_level")
+    private Double batteryLevel;
+
+    @Column(name = "rain_level")
+    private Double rainLevel;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "logs", "spas" }, allowSetters = true)
     private SpasArrInstall spasArrInstall;
@@ -91,6 +100,45 @@ public class SpasArrLog implements Serializable {
         this.logValue = logValue;
     }
 
+    public Double getWaterLevel() {
+        return this.waterLevel;
+    }
+
+    public SpasArrLog waterLevel(Double waterLevel) {
+        this.setWaterLevel(waterLevel);
+        return this;
+    }
+
+    public void setWaterLevel(Double waterLevel) {
+        this.waterLevel = waterLevel;
+    }
+
+    public Double getBatteryLevel() {
+        return this.batteryLevel;
+    }
+
+    public SpasArrLog batteryLevel(Double batteryLevel) {
+        this.setBatteryLevel(batteryLevel);
+        return this;
+    }
+
+    public void setBatteryLevel(Double batteryLevel) {
+        this.batteryLevel = batteryLevel;
+    }
+
+    public Double getRainLevel() {
+        return this.rainLevel;
+    }
+
+    public SpasArrLog rainLevel(Double rainLevel) {
+        this.setRainLevel(rainLevel);
+        return this;
+    }
+
+    public void setRainLevel(Double rainLevel) {
+        this.rainLevel = rainLevel;
+    }
+
     public SpasArrInstall getSpasArrInstall() {
         return this.spasArrInstall;
     }
@@ -131,6 +179,9 @@ public class SpasArrLog implements Serializable {
             ", timeLog='" + getTimeLog() + "'" +
             ", timeRetrieve='" + getTimeRetrieve() + "'" +
             ", logValue='" + getLogValue() + "'" +
+            ", waterLevel=" + getWaterLevel() +
+            ", batteryLevel=" + getBatteryLevel() +
+            ", rainLevel=" + getRainLevel() +
             "}";
     }
 }

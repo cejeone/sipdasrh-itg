@@ -79,6 +79,9 @@ class SpasArrLogCriteriaTest {
         spasArrLogCriteria.timeLog();
         spasArrLogCriteria.timeRetrieve();
         spasArrLogCriteria.logValue();
+        spasArrLogCriteria.waterLevel();
+        spasArrLogCriteria.batteryLevel();
+        spasArrLogCriteria.rainLevel();
         spasArrLogCriteria.spasArrInstallId();
         spasArrLogCriteria.distinct();
     }
@@ -90,6 +93,9 @@ class SpasArrLogCriteriaTest {
                 condition.apply(criteria.getTimeLog()) &&
                 condition.apply(criteria.getTimeRetrieve()) &&
                 condition.apply(criteria.getLogValue()) &&
+                condition.apply(criteria.getWaterLevel()) &&
+                condition.apply(criteria.getBatteryLevel()) &&
+                condition.apply(criteria.getRainLevel()) &&
                 condition.apply(criteria.getSpasArrInstallId()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
@@ -103,6 +109,9 @@ class SpasArrLogCriteriaTest {
                 condition.apply(criteria.getTimeLog(), copy.getTimeLog()) &&
                 condition.apply(criteria.getTimeRetrieve(), copy.getTimeRetrieve()) &&
                 condition.apply(criteria.getLogValue(), copy.getLogValue()) &&
+                condition.apply(criteria.getWaterLevel(), copy.getWaterLevel()) &&
+                condition.apply(criteria.getBatteryLevel(), copy.getBatteryLevel()) &&
+                condition.apply(criteria.getRainLevel(), copy.getRainLevel()) &&
                 condition.apply(criteria.getSpasArrInstallId(), copy.getSpasArrInstallId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"

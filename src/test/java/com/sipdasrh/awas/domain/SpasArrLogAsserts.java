@@ -57,7 +57,10 @@ public class SpasArrLogAsserts {
                     .usingComparator(zonedDataTimeSameInstant)
                     .isEqualTo(expected.getTimeRetrieve())
             )
-            .satisfies(a -> assertThat(a.getLogValue()).as("check logValue").isEqualTo(expected.getLogValue()));
+            .satisfies(a -> assertThat(a.getLogValue()).as("check logValue").isEqualTo(expected.getLogValue()))
+            .satisfies(a -> assertThat(a.getWaterLevel()).as("check waterLevel").isEqualTo(expected.getWaterLevel()))
+            .satisfies(a -> assertThat(a.getBatteryLevel()).as("check batteryLevel").isEqualTo(expected.getBatteryLevel()))
+            .satisfies(a -> assertThat(a.getRainLevel()).as("check rainLevel").isEqualTo(expected.getRainLevel()));
     }
 
     /**

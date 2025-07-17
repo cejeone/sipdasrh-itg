@@ -30,6 +30,12 @@ public class SpasArrLogCriteria implements Serializable, Criteria {
 
     private StringFilter logValue;
 
+    private DoubleFilter waterLevel;
+
+    private DoubleFilter batteryLevel;
+
+    private DoubleFilter rainLevel;
+
     private LongFilter spasArrInstallId;
 
     private Boolean distinct;
@@ -41,6 +47,9 @@ public class SpasArrLogCriteria implements Serializable, Criteria {
         this.timeLog = other.optionalTimeLog().map(ZonedDateTimeFilter::copy).orElse(null);
         this.timeRetrieve = other.optionalTimeRetrieve().map(ZonedDateTimeFilter::copy).orElse(null);
         this.logValue = other.optionalLogValue().map(StringFilter::copy).orElse(null);
+        this.waterLevel = other.optionalWaterLevel().map(DoubleFilter::copy).orElse(null);
+        this.batteryLevel = other.optionalBatteryLevel().map(DoubleFilter::copy).orElse(null);
+        this.rainLevel = other.optionalRainLevel().map(DoubleFilter::copy).orElse(null);
         this.spasArrInstallId = other.optionalSpasArrInstallId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
@@ -126,6 +135,63 @@ public class SpasArrLogCriteria implements Serializable, Criteria {
         this.logValue = logValue;
     }
 
+    public DoubleFilter getWaterLevel() {
+        return waterLevel;
+    }
+
+    public Optional<DoubleFilter> optionalWaterLevel() {
+        return Optional.ofNullable(waterLevel);
+    }
+
+    public DoubleFilter waterLevel() {
+        if (waterLevel == null) {
+            setWaterLevel(new DoubleFilter());
+        }
+        return waterLevel;
+    }
+
+    public void setWaterLevel(DoubleFilter waterLevel) {
+        this.waterLevel = waterLevel;
+    }
+
+    public DoubleFilter getBatteryLevel() {
+        return batteryLevel;
+    }
+
+    public Optional<DoubleFilter> optionalBatteryLevel() {
+        return Optional.ofNullable(batteryLevel);
+    }
+
+    public DoubleFilter batteryLevel() {
+        if (batteryLevel == null) {
+            setBatteryLevel(new DoubleFilter());
+        }
+        return batteryLevel;
+    }
+
+    public void setBatteryLevel(DoubleFilter batteryLevel) {
+        this.batteryLevel = batteryLevel;
+    }
+
+    public DoubleFilter getRainLevel() {
+        return rainLevel;
+    }
+
+    public Optional<DoubleFilter> optionalRainLevel() {
+        return Optional.ofNullable(rainLevel);
+    }
+
+    public DoubleFilter rainLevel() {
+        if (rainLevel == null) {
+            setRainLevel(new DoubleFilter());
+        }
+        return rainLevel;
+    }
+
+    public void setRainLevel(DoubleFilter rainLevel) {
+        this.rainLevel = rainLevel;
+    }
+
     public LongFilter getSpasArrInstallId() {
         return spasArrInstallId;
     }
@@ -178,6 +244,9 @@ public class SpasArrLogCriteria implements Serializable, Criteria {
             Objects.equals(timeLog, that.timeLog) &&
             Objects.equals(timeRetrieve, that.timeRetrieve) &&
             Objects.equals(logValue, that.logValue) &&
+            Objects.equals(waterLevel, that.waterLevel) &&
+            Objects.equals(batteryLevel, that.batteryLevel) &&
+            Objects.equals(rainLevel, that.rainLevel) &&
             Objects.equals(spasArrInstallId, that.spasArrInstallId) &&
             Objects.equals(distinct, that.distinct)
         );
@@ -185,7 +254,7 @@ public class SpasArrLogCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, timeLog, timeRetrieve, logValue, spasArrInstallId, distinct);
+        return Objects.hash(id, timeLog, timeRetrieve, logValue, waterLevel, batteryLevel, rainLevel, spasArrInstallId, distinct);
     }
 
     // prettier-ignore
@@ -196,6 +265,9 @@ public class SpasArrLogCriteria implements Serializable, Criteria {
             optionalTimeLog().map(f -> "timeLog=" + f + ", ").orElse("") +
             optionalTimeRetrieve().map(f -> "timeRetrieve=" + f + ", ").orElse("") +
             optionalLogValue().map(f -> "logValue=" + f + ", ").orElse("") +
+            optionalWaterLevel().map(f -> "waterLevel=" + f + ", ").orElse("") +
+            optionalBatteryLevel().map(f -> "batteryLevel=" + f + ", ").orElse("") +
+            optionalRainLevel().map(f -> "rainLevel=" + f + ", ").orElse("") +
             optionalSpasArrInstallId().map(f -> "spasArrInstallId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";
