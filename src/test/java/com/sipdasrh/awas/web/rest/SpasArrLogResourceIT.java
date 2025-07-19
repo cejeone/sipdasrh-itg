@@ -51,6 +51,18 @@ class SpasArrLogResourceIT {
     private static final String DEFAULT_LOG_VALUE = "AAAAAAAAAA";
     private static final String UPDATED_LOG_VALUE = "BBBBBBBBBB";
 
+    private static final Double DEFAULT_WATER_LEVEL = 1D;
+    private static final Double UPDATED_WATER_LEVEL = 2D;
+    private static final Double SMALLER_WATER_LEVEL = 1D - 1D;
+
+    private static final Double DEFAULT_BATTERY_LEVEL = 1D;
+    private static final Double UPDATED_BATTERY_LEVEL = 2D;
+    private static final Double SMALLER_BATTERY_LEVEL = 1D - 1D;
+
+    private static final Double DEFAULT_RAIN_LEVEL = 1D;
+    private static final Double UPDATED_RAIN_LEVEL = 2D;
+    private static final Double SMALLER_RAIN_LEVEL = 1D - 1D;
+
     private static final String ENTITY_API_URL = "/api/spas-arr-logs";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -83,7 +95,13 @@ class SpasArrLogResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static SpasArrLog createEntity() {
-        return new SpasArrLog().timeLog(DEFAULT_TIME_LOG).timeRetrieve(DEFAULT_TIME_RETRIEVE).logValue(DEFAULT_LOG_VALUE);
+        return new SpasArrLog()
+            .timeLog(DEFAULT_TIME_LOG)
+            .timeRetrieve(DEFAULT_TIME_RETRIEVE)
+            .logValue(DEFAULT_LOG_VALUE)
+            .waterLevel(DEFAULT_WATER_LEVEL)
+            .batteryLevel(DEFAULT_BATTERY_LEVEL)
+            .rainLevel(DEFAULT_RAIN_LEVEL);
     }
 
     /**
@@ -93,7 +111,13 @@ class SpasArrLogResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static SpasArrLog createUpdatedEntity() {
-        return new SpasArrLog().timeLog(UPDATED_TIME_LOG).timeRetrieve(UPDATED_TIME_RETRIEVE).logValue(UPDATED_LOG_VALUE);
+        return new SpasArrLog()
+            .timeLog(UPDATED_TIME_LOG)
+            .timeRetrieve(UPDATED_TIME_RETRIEVE)
+            .logValue(UPDATED_LOG_VALUE)
+            .waterLevel(UPDATED_WATER_LEVEL)
+            .batteryLevel(UPDATED_BATTERY_LEVEL)
+            .rainLevel(UPDATED_RAIN_LEVEL);
     }
 
     @BeforeEach
@@ -165,7 +189,10 @@ class SpasArrLogResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(spasArrLog.getId().intValue())))
             .andExpect(jsonPath("$.[*].timeLog").value(hasItem(sameInstant(DEFAULT_TIME_LOG))))
             .andExpect(jsonPath("$.[*].timeRetrieve").value(hasItem(sameInstant(DEFAULT_TIME_RETRIEVE))))
-            .andExpect(jsonPath("$.[*].logValue").value(hasItem(DEFAULT_LOG_VALUE)));
+            .andExpect(jsonPath("$.[*].logValue").value(hasItem(DEFAULT_LOG_VALUE)))
+            .andExpect(jsonPath("$.[*].waterLevel").value(hasItem(DEFAULT_WATER_LEVEL)))
+            .andExpect(jsonPath("$.[*].batteryLevel").value(hasItem(DEFAULT_BATTERY_LEVEL)))
+            .andExpect(jsonPath("$.[*].rainLevel").value(hasItem(DEFAULT_RAIN_LEVEL)));
     }
 
     @Test
@@ -182,7 +209,10 @@ class SpasArrLogResourceIT {
             .andExpect(jsonPath("$.id").value(spasArrLog.getId().intValue()))
             .andExpect(jsonPath("$.timeLog").value(sameInstant(DEFAULT_TIME_LOG)))
             .andExpect(jsonPath("$.timeRetrieve").value(sameInstant(DEFAULT_TIME_RETRIEVE)))
-            .andExpect(jsonPath("$.logValue").value(DEFAULT_LOG_VALUE));
+            .andExpect(jsonPath("$.logValue").value(DEFAULT_LOG_VALUE))
+            .andExpect(jsonPath("$.waterLevel").value(DEFAULT_WATER_LEVEL))
+            .andExpect(jsonPath("$.batteryLevel").value(DEFAULT_BATTERY_LEVEL))
+            .andExpect(jsonPath("$.rainLevel").value(DEFAULT_RAIN_LEVEL));
     }
 
     @Test
@@ -404,6 +434,240 @@ class SpasArrLogResourceIT {
 
     @Test
     @Transactional
+    void getAllSpasArrLogsByWaterLevelIsEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where waterLevel equals to
+        defaultSpasArrLogFiltering("waterLevel.equals=" + DEFAULT_WATER_LEVEL, "waterLevel.equals=" + UPDATED_WATER_LEVEL);
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByWaterLevelIsInShouldWork() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where waterLevel in
+        defaultSpasArrLogFiltering(
+            "waterLevel.in=" + DEFAULT_WATER_LEVEL + "," + UPDATED_WATER_LEVEL,
+            "waterLevel.in=" + UPDATED_WATER_LEVEL
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByWaterLevelIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where waterLevel is not null
+        defaultSpasArrLogFiltering("waterLevel.specified=true", "waterLevel.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByWaterLevelIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where waterLevel is greater than or equal to
+        defaultSpasArrLogFiltering(
+            "waterLevel.greaterThanOrEqual=" + DEFAULT_WATER_LEVEL,
+            "waterLevel.greaterThanOrEqual=" + UPDATED_WATER_LEVEL
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByWaterLevelIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where waterLevel is less than or equal to
+        defaultSpasArrLogFiltering(
+            "waterLevel.lessThanOrEqual=" + DEFAULT_WATER_LEVEL,
+            "waterLevel.lessThanOrEqual=" + SMALLER_WATER_LEVEL
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByWaterLevelIsLessThanSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where waterLevel is less than
+        defaultSpasArrLogFiltering("waterLevel.lessThan=" + UPDATED_WATER_LEVEL, "waterLevel.lessThan=" + DEFAULT_WATER_LEVEL);
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByWaterLevelIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where waterLevel is greater than
+        defaultSpasArrLogFiltering("waterLevel.greaterThan=" + SMALLER_WATER_LEVEL, "waterLevel.greaterThan=" + DEFAULT_WATER_LEVEL);
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByBatteryLevelIsEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where batteryLevel equals to
+        defaultSpasArrLogFiltering("batteryLevel.equals=" + DEFAULT_BATTERY_LEVEL, "batteryLevel.equals=" + UPDATED_BATTERY_LEVEL);
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByBatteryLevelIsInShouldWork() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where batteryLevel in
+        defaultSpasArrLogFiltering(
+            "batteryLevel.in=" + DEFAULT_BATTERY_LEVEL + "," + UPDATED_BATTERY_LEVEL,
+            "batteryLevel.in=" + UPDATED_BATTERY_LEVEL
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByBatteryLevelIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where batteryLevel is not null
+        defaultSpasArrLogFiltering("batteryLevel.specified=true", "batteryLevel.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByBatteryLevelIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where batteryLevel is greater than or equal to
+        defaultSpasArrLogFiltering(
+            "batteryLevel.greaterThanOrEqual=" + DEFAULT_BATTERY_LEVEL,
+            "batteryLevel.greaterThanOrEqual=" + UPDATED_BATTERY_LEVEL
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByBatteryLevelIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where batteryLevel is less than or equal to
+        defaultSpasArrLogFiltering(
+            "batteryLevel.lessThanOrEqual=" + DEFAULT_BATTERY_LEVEL,
+            "batteryLevel.lessThanOrEqual=" + SMALLER_BATTERY_LEVEL
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByBatteryLevelIsLessThanSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where batteryLevel is less than
+        defaultSpasArrLogFiltering("batteryLevel.lessThan=" + UPDATED_BATTERY_LEVEL, "batteryLevel.lessThan=" + DEFAULT_BATTERY_LEVEL);
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByBatteryLevelIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where batteryLevel is greater than
+        defaultSpasArrLogFiltering(
+            "batteryLevel.greaterThan=" + SMALLER_BATTERY_LEVEL,
+            "batteryLevel.greaterThan=" + DEFAULT_BATTERY_LEVEL
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByRainLevelIsEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where rainLevel equals to
+        defaultSpasArrLogFiltering("rainLevel.equals=" + DEFAULT_RAIN_LEVEL, "rainLevel.equals=" + UPDATED_RAIN_LEVEL);
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByRainLevelIsInShouldWork() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where rainLevel in
+        defaultSpasArrLogFiltering("rainLevel.in=" + DEFAULT_RAIN_LEVEL + "," + UPDATED_RAIN_LEVEL, "rainLevel.in=" + UPDATED_RAIN_LEVEL);
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByRainLevelIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where rainLevel is not null
+        defaultSpasArrLogFiltering("rainLevel.specified=true", "rainLevel.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByRainLevelIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where rainLevel is greater than or equal to
+        defaultSpasArrLogFiltering(
+            "rainLevel.greaterThanOrEqual=" + DEFAULT_RAIN_LEVEL,
+            "rainLevel.greaterThanOrEqual=" + UPDATED_RAIN_LEVEL
+        );
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByRainLevelIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where rainLevel is less than or equal to
+        defaultSpasArrLogFiltering("rainLevel.lessThanOrEqual=" + DEFAULT_RAIN_LEVEL, "rainLevel.lessThanOrEqual=" + SMALLER_RAIN_LEVEL);
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByRainLevelIsLessThanSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where rainLevel is less than
+        defaultSpasArrLogFiltering("rainLevel.lessThan=" + UPDATED_RAIN_LEVEL, "rainLevel.lessThan=" + DEFAULT_RAIN_LEVEL);
+    }
+
+    @Test
+    @Transactional
+    void getAllSpasArrLogsByRainLevelIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        insertedSpasArrLog = spasArrLogRepository.saveAndFlush(spasArrLog);
+
+        // Get all the spasArrLogList where rainLevel is greater than
+        defaultSpasArrLogFiltering("rainLevel.greaterThan=" + SMALLER_RAIN_LEVEL, "rainLevel.greaterThan=" + DEFAULT_RAIN_LEVEL);
+    }
+
+    @Test
+    @Transactional
     void getAllSpasArrLogsBySpasArrInstallIsEqualToSomething() throws Exception {
         SpasArrInstall spasArrInstall;
         if (TestUtil.findAll(em, SpasArrInstall.class).isEmpty()) {
@@ -440,7 +704,10 @@ class SpasArrLogResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(spasArrLog.getId().intValue())))
             .andExpect(jsonPath("$.[*].timeLog").value(hasItem(sameInstant(DEFAULT_TIME_LOG))))
             .andExpect(jsonPath("$.[*].timeRetrieve").value(hasItem(sameInstant(DEFAULT_TIME_RETRIEVE))))
-            .andExpect(jsonPath("$.[*].logValue").value(hasItem(DEFAULT_LOG_VALUE)));
+            .andExpect(jsonPath("$.[*].logValue").value(hasItem(DEFAULT_LOG_VALUE)))
+            .andExpect(jsonPath("$.[*].waterLevel").value(hasItem(DEFAULT_WATER_LEVEL)))
+            .andExpect(jsonPath("$.[*].batteryLevel").value(hasItem(DEFAULT_BATTERY_LEVEL)))
+            .andExpect(jsonPath("$.[*].rainLevel").value(hasItem(DEFAULT_RAIN_LEVEL)));
 
         // Check, that the count call also returns 1
         restSpasArrLogMockMvc
@@ -488,7 +755,13 @@ class SpasArrLogResourceIT {
         SpasArrLog updatedSpasArrLog = spasArrLogRepository.findById(spasArrLog.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedSpasArrLog are not directly saved in db
         em.detach(updatedSpasArrLog);
-        updatedSpasArrLog.timeLog(UPDATED_TIME_LOG).timeRetrieve(UPDATED_TIME_RETRIEVE).logValue(UPDATED_LOG_VALUE);
+        updatedSpasArrLog
+            .timeLog(UPDATED_TIME_LOG)
+            .timeRetrieve(UPDATED_TIME_RETRIEVE)
+            .logValue(UPDATED_LOG_VALUE)
+            .waterLevel(UPDATED_WATER_LEVEL)
+            .batteryLevel(UPDATED_BATTERY_LEVEL)
+            .rainLevel(UPDATED_RAIN_LEVEL);
         SpasArrLogDTO spasArrLogDTO = spasArrLogMapper.toDto(updatedSpasArrLog);
 
         restSpasArrLogMockMvc
@@ -578,7 +851,7 @@ class SpasArrLogResourceIT {
         SpasArrLog partialUpdatedSpasArrLog = new SpasArrLog();
         partialUpdatedSpasArrLog.setId(spasArrLog.getId());
 
-        partialUpdatedSpasArrLog.timeRetrieve(UPDATED_TIME_RETRIEVE).logValue(UPDATED_LOG_VALUE);
+        partialUpdatedSpasArrLog.timeLog(UPDATED_TIME_LOG).logValue(UPDATED_LOG_VALUE);
 
         restSpasArrLogMockMvc
             .perform(
@@ -609,7 +882,13 @@ class SpasArrLogResourceIT {
         SpasArrLog partialUpdatedSpasArrLog = new SpasArrLog();
         partialUpdatedSpasArrLog.setId(spasArrLog.getId());
 
-        partialUpdatedSpasArrLog.timeLog(UPDATED_TIME_LOG).timeRetrieve(UPDATED_TIME_RETRIEVE).logValue(UPDATED_LOG_VALUE);
+        partialUpdatedSpasArrLog
+            .timeLog(UPDATED_TIME_LOG)
+            .timeRetrieve(UPDATED_TIME_RETRIEVE)
+            .logValue(UPDATED_LOG_VALUE)
+            .waterLevel(UPDATED_WATER_LEVEL)
+            .batteryLevel(UPDATED_BATTERY_LEVEL)
+            .rainLevel(UPDATED_RAIN_LEVEL);
 
         restSpasArrLogMockMvc
             .perform(

@@ -75,6 +75,9 @@ public class SpasArrLogQueryService extends QueryService<SpasArrLog> {
                 buildRangeSpecification(criteria.getTimeLog(), SpasArrLog_.timeLog),
                 buildRangeSpecification(criteria.getTimeRetrieve(), SpasArrLog_.timeRetrieve),
                 buildStringSpecification(criteria.getLogValue(), SpasArrLog_.logValue),
+                buildRangeSpecification(criteria.getWaterLevel(), SpasArrLog_.waterLevel),
+                buildRangeSpecification(criteria.getBatteryLevel(), SpasArrLog_.batteryLevel),
+                buildRangeSpecification(criteria.getRainLevel(), SpasArrLog_.rainLevel),
                 buildSpecification(criteria.getSpasArrInstallId(), root ->
                     root.join(SpasArrLog_.spasArrInstall, JoinType.LEFT).get(SpasArrInstall_.id)
                 )

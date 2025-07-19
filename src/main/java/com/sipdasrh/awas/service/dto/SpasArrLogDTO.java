@@ -18,6 +18,12 @@ public class SpasArrLogDTO implements Serializable {
 
     private String logValue;
 
+    private Double waterLevel;
+
+    private Double batteryLevel;
+
+    private Double rainLevel;
+
     private SpasArrInstallDTO spasArrInstall;
 
     public Long getId() {
@@ -50,6 +56,30 @@ public class SpasArrLogDTO implements Serializable {
 
     public void setLogValue(String logValue) {
         this.logValue = logValue;
+    }
+
+    public Double getWaterLevel() {
+        return waterLevel;
+    }
+
+    public void setWaterLevel(Double waterLevel) {
+        this.waterLevel = waterLevel;
+    }
+
+    public Double getBatteryLevel() {
+        return batteryLevel;
+    }
+
+    public void setBatteryLevel(Double batteryLevel) {
+        this.batteryLevel = batteryLevel;
+    }
+
+    public Double getRainLevel() {
+        return rainLevel;
+    }
+
+    public void setRainLevel(Double rainLevel) {
+        this.rainLevel = rainLevel;
     }
 
     public SpasArrInstallDTO getSpasArrInstall() {
@@ -89,6 +119,9 @@ public class SpasArrLogDTO implements Serializable {
             ", timeLog='" + getTimeLog() + "'" +
             ", timeRetrieve='" + getTimeRetrieve() + "'" +
             ", logValue='" + getLogValue() + "'" +
+            ", waterLevel=" + getWaterLevel() +
+            ", batteryLevel=" + getBatteryLevel() +
+            ", rainLevel=" + getRainLevel() +
             ", spasArrInstall=" + getSpasArrInstall() +
             "}";
     }

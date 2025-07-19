@@ -56,9 +56,9 @@ spring:
       port: 8500
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/serviceAwas
-    username: serviceAwas
-    password:
+    url: jdbc:postgresql://194.233.72.247:15000/serviceAwas
+    username: postgres
+    password: '@tabiin1447H#'
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -85,7 +85,7 @@ jhipster:
   cache: # Cache configuration
     redis: # Redis configuration
       expiration: 3600 # By default objects stay 1 hour (in seconds) in the cache
-      server: redis://localhost:6379
+      server: redis://194.233.72.247:15001
       cluster: false
       # server: redis://localhost:6379,redis://localhost:16379,redis://localhost:26379
       # cluster: true
