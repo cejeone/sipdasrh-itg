@@ -68,21 +68,24 @@ public class SpasSensorServiceImpl implements SpasSensorService {
                     // Start Parsing JSON from IoT
                     Map<String, Object> sensorDetail = (Map<String, Object>) sensorData.get("sensor");
                     Map<String, Object> waterLevel = (Map<String, Object>) sensorDetail.get("Water Level");
-                    Integer waterLevelInteger = (Integer) waterLevel.get("value_actual");
+                    Integer waterLevelInteger = (int) waterLevel.get("value_actual");
                     //                        String waterLevelUnit = waterLevel.get("unit").toString();
 
-                    Map<String, Object> batteryDetail = (Map<String, Object>) sensorData.get("Battery");
-                    Integer batteryLevelInteger = (Integer) batteryDetail.get("value_actual");
+                    Map<String, Object> batteryDetail = (Map<String, Object>) sensorDetail.get("Battery");
+                    Double batteryLevelInteger = (Double) batteryDetail.get("value_actual");
                     //                        String batteryLevelUnit = waterLevel.get("unit").toString();
 
-                    Map<String, Object> railDetail = (Map<String, Object>) sensorData.get("Rainfall");
-                    Integer rainLevelInteger = (Integer) batteryDetail.get("value_actual");
+                    Map<String, Object> rainDetail = (Map<String, Object>) sensorDetail.get("Rainfall");
+                    Integer rainLevelInteger = (int) rainDetail.get("value_actual");
                     //                        String rainLevelUnit = waterLevel.get("unit").toString();
                     // End Parsing
                     SpasArrLog newData = new SpasArrLog()
                         .logValue(sensorDetail.toString())
                         .timeLog(localizedDate)
                         .timeRetrieve(ZonedDateTime.now())
+                        .batteryLevel(batteryLevelInteger)
+                        .rainLevel((double)rainLevelInteger)
+                        .waterLevel((double)waterLevelInteger)
                         .spasArrInstall(spasArrLog);
                     spasArrLogRepository.saveAndFlush(newData);
 
@@ -90,15 +93,15 @@ public class SpasSensorServiceImpl implements SpasSensorService {
                     try {
                         Boolean isSynced = postToServiceGis(
                             spasArrLog.getUrlEwsGis(),
-                            (double) waterLevelInteger,
-                            (double) batteryLevelInteger,
+                            (double)waterLevelInteger,
+                            batteryLevelInteger,
                             spasArrLog.getThresholdInstalasi(),
-                            (double) rainLevelInteger,
+                            (double)rainLevelInteger,
                             arcgisToken
                         );
-                        if (isSynced) LOG.info("Successfully Synced to GIS Service : ObjectID={}", spasArrLog.getUrlEwsGis());
+                        if (isSynced) LOG.info(" Synced to GIS Service : ObjectID={}", spasArrLog.getUrlEwsGis());
                     } catch (Exception e) {
-                        LOG.error("Error Synced To GIS Service : {}", e.getMessage());
+                        LOG.error("Error : {}", e.getMessage());
                         throw new RuntimeException(e);
                     }
                 }
@@ -145,7 +148,7 @@ public class SpasSensorServiceImpl implements SpasSensorService {
         headers.setBearerAuth(token);
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         String postBody = formatPostRequest(objectId, ketinggian, voltBattery, thresHold, curahHujan);
-        body.add("features", "");
+        body.add("features", postBody);
         body.add("f", "pjson");
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
@@ -206,7 +209,6 @@ public class SpasSensorServiceImpl implements SpasSensorService {
         StringBuffer stringBuffer = new StringBuffer("[{\"attributes\":{\"objectid\":");
         stringBuffer
             .append(objectId)
-            .append(',')
             .append(",\"status\":")
             .append(currentStatus)
             .append(",\"ketinggian\":")
@@ -216,7 +218,7 @@ public class SpasSensorServiceImpl implements SpasSensorService {
             .append(",\"curah_huja\":")
             .append(curahHujan)
             .append("},}]");
-        return ("");
+        return stringBuffer.toString();
     }
 
     /**

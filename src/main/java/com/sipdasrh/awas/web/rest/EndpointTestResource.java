@@ -27,4 +27,12 @@ public class EndpointTestResource {
         return ResponseEntity.ok().body(token);
     }
 
+    @GetMapping("/get-data")
+    public ResponseEntity<String> getData() throws Exception {
+        LOG.info("Get Token API : Start");
+        spasSensorService.getDataFromSensors();
+        LOG.info("Get Token API : End");
+        return ResponseEntity.ok().body("Done");
+    }
+
 }
