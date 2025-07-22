@@ -15,10 +15,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 17
-      - name: Package application
-        run: npm run java:jar:prod
       - name: Make mvnw executable
         run: chmod +x ./mvnw
+      - name: Package application
+        run: npm run java:jar:prod
       - name: Build and publish docker image
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
         run: |
