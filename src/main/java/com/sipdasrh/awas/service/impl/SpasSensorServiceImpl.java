@@ -84,8 +84,8 @@ public class SpasSensorServiceImpl implements SpasSensorService {
                         .timeLog(localizedDate)
                         .timeRetrieve(ZonedDateTime.now())
                         .batteryLevel(batteryLevelInteger)
-                        .rainLevel((double)rainLevelInteger)
-                        .waterLevel((double)waterLevelInteger)
+                        .rainLevel((double) rainLevelInteger)
+                        .waterLevel((double) waterLevelInteger)
                         .spasArrInstall(spasArrLog);
                     spasArrLogRepository.saveAndFlush(newData);
 
@@ -93,10 +93,10 @@ public class SpasSensorServiceImpl implements SpasSensorService {
                     try {
                         Boolean isSynced = postToServiceGis(
                             spasArrLog.getUrlEwsGis(),
-                            (double)waterLevelInteger,
+                            (double) waterLevelInteger,
                             batteryLevelInteger,
                             spasArrLog.getThresholdInstalasi(),
-                            (double)rainLevelInteger,
+                            (double) rainLevelInteger,
                             arcgisToken
                         );
                         if (isSynced) LOG.info(" Synced to GIS Service : ObjectID={}", spasArrLog.getUrlEwsGis());
@@ -206,8 +206,9 @@ public class SpasSensorServiceImpl implements SpasSensorService {
     private static String formatPostRequest(int objectId, Double ketinggian, Double voltBattery, Double thresHold, Double curahHujan) {
         //[{"attributes": {"objectid": 2,"status" : "normal"},}]
         String currentStatus = determineCurrentStatus(ketinggian, thresHold);
-        StringBuffer stringBuffer = new StringBuffer("[{\"attributes\":{\"objectid\":");
-        stringBuffer
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+            .append("[{\"attributes\":{\"objectid\":")
             .append(objectId)
             .append(",\"status\":")
             .append(currentStatus)
@@ -218,7 +219,7 @@ public class SpasSensorServiceImpl implements SpasSensorService {
             .append(",\"curah_huja\":")
             .append(curahHujan)
             .append("},}]");
-        return stringBuffer.toString();
+        return stringBuilder.toString();
     }
 
     /**
