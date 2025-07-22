@@ -5,6 +5,10 @@
 spring:
   cloud:
     consul:
+      discovery:
+        prefer-ip-address: true
+      host: 172.16.2.175
+      port: 8500
       config:
         fail-fast: true
         format: yaml # set this to "files" if using git2consul

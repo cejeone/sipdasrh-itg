@@ -17,6 +17,7 @@ logging:
   level:
     ROOT: INFO
     tech.jhipster: INFO
+    org.hibernate.SQL: INFO
     com.sipdasrh.awas: INFO
 
 management:
