@@ -41,13 +41,13 @@ spring:
     consul:
       discovery:
         prefer-ip-address: true
-      host: localhost
+      host: 172.16.2.175
       port: 8500
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/serviceAwas
-    username: serviceAwas
-    password:
+    url: jdbc:postgresql://172.16.2.175:5432/serviceAwas
+    username: app_service
+    password: AppP05t9r3
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -97,7 +97,7 @@ jhipster:
   cache: # Cache configuration
     redis: # Redis configuration
       expiration: 3600 # By default objects stay 1 hour (in seconds) in the cache
-      server: redis://localhost:6379
+      server: redis://172.16.2.175:6379
       cluster: false
       # server: redis://localhost:6379,redis://localhost:16379,redis://localhost:26379
       # cluster: true
