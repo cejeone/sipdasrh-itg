@@ -229,9 +229,9 @@ public class SpasSensorServiceImpl implements SpasSensorService {
      * @return
      */
     private static String determineCurrentStatus(Double ketinggian, Double threshold) {
-        if (threshold - ketinggian > 10) return "normal";
-        if ((threshold - ketinggian <= 10) && (threshold - ketinggian >= 5)) return "awas";
-        if (threshold - ketinggian < 5) return "banjir";
+        if (threshold - ketinggian > 10) return "aman";
+        if ((threshold - ketinggian <= 10) && (threshold - ketinggian >= 0)) return "hati-hati";
+        if (threshold - ketinggian < 0) return "siaga";
 
         return "tidak terdeteksi";
     }

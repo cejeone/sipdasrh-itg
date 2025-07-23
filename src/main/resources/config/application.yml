@@ -247,4 +247,4 @@ application:
     userName: PublisherSIPDASRH
     password: P4blish3rSIPDASRH
     urlToken: https://172.16.2.120/portal/sharing/rest/generateToken?f=json&referer=localhost:3000
-    urlService: https://ditjen-pdasrh.kehutanan.go.id/server/rest/services/Sebaran_Titik_EWS/FeatureServer/0/updateFeatures
+    urlService: https://172.16.2.120/server/rest/services/Sebaran_Titik_EWS/FeatureServer/0/updateFeatures
