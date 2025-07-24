@@ -102,6 +102,13 @@ jhipster:
       cluster: false
       # server: redis://localhost:6379,redis://localhost:16379,redis://localhost:26379
       # cluster: true
+  cors:
+     allowed-origins: "http://localhost:3000,https://localhost:3000,http://pdasrh.kehutanan.go.id,https://pdasrh.kehutanan.go.id"
+     allowed-methods: "*"
+     allowed-headers: "*"
+     exposed-headers: "Authorization,Link,X-Total-Count"
+     allow-credentials: true
+     max-age: 1800
   security:
     authentication:
       jwt:
