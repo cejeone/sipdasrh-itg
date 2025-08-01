@@ -103,7 +103,7 @@ jhipster:
       # server: redis://localhost:6379,redis://localhost:16379,redis://localhost:26379
       # cluster: true
   cors:
-     allowed-origins: "*"
+     allowed-origins: "http://localhost:3000,https://172.16.2.175:3000"
      allowed-methods: "*"
      allowed-headers: "*"
      exposed-headers: "Authorization,Link,X-Total-Count"
