@@ -17,5 +17,6 @@ public interface SpasArrLogMapper extends EntityMapper<SpasArrLogDTO, SpasArrLog
     @Named("spasArrInstallId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "namaInstalasi", source = "namaInstalasi")
     SpasArrInstallDTO toDtoSpasArrInstallId(SpasArrInstall spasArrInstall);
 }
