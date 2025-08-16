@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -48,6 +49,7 @@ public class SpasSensorServiceImpl implements SpasSensorService {
     }
 
     @Override
+    @Scheduled(cron = "0 */10 * * * *")
     public void getDataFromSensors() {
         try {
             LOG.info("Get Data From Sensors API : Start at {}", LocalDate.now());
