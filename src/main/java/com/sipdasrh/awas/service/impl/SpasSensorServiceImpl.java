@@ -70,24 +70,32 @@ public class SpasSensorServiceImpl implements SpasSensorService {
                     // Start Parsing JSON from IoT
                     Map<String, Object> sensorDetail = (Map<String, Object>) sensorData.get("sensor");
                     Map<String, Object> waterLevel = (Map<String, Object>) sensorDetail.get("Water Level");
-                    Integer waterLevelInteger = (int) waterLevel.get("value_actual");
-                    //                        String waterLevelUnit = waterLevel.get("unit").toString();
+                    Double waterLevelInteger = (Double) waterLevel.get("value_actual");
 
                     Map<String, Object> batteryDetail = (Map<String, Object>) sensorDetail.get("Battery");
-                    Double batteryLevelInteger = (Double) batteryDetail.get("value_actual");
-                    //                        String batteryLevelUnit = waterLevel.get("unit").toString();
+                    Double batteryLevelInteger = 0.0;
+                    if(batteryDetail.get("value_actual") instanceof Integer) {
+                        Integer tempBatteryLevelInteger = (Integer) batteryDetail.get("value_actual");
+                        if(tempBatteryLevelInteger != 0)
+                            batteryLevelInteger = (Double) batteryDetail.get("value_actual");
+                    }
+                    batteryLevelInteger = (Double) batteryDetail.get("value_actual");
 
                     Map<String, Object> rainDetail = (Map<String, Object>) sensorDetail.get("Rainfall");
-                    Integer rainLevelInteger = (int) rainDetail.get("value_actual");
-                    //                        String rainLevelUnit = waterLevel.get("unit").toString();
+                    Double rainLevelInteger = 0.0;
+                    if(rainDetail.get("value_actual") instanceof Integer) {
+                        Integer tempRainLevelInteger = (Integer) rainDetail.get("value_actual");
+                        if(tempRainLevelInteger != 0)
+                            rainLevelInteger = (Double) rainDetail.get("value_actual");
+                    }
                     // End Parsing
                     SpasArrLog newData = new SpasArrLog()
                         .logValue(sensorDetail.toString())
                         .timeLog(localizedDate)
                         .timeRetrieve(ZonedDateTime.now())
                         .batteryLevel(batteryLevelInteger)
-                        .rainLevel((double) rainLevelInteger)
-                        .waterLevel((double) waterLevelInteger)
+                        .rainLevel(rainLevelInteger)
+                        .waterLevel(waterLevelInteger)
                         .spasArrInstall(spasArrLog);
                     spasArrLogRepository.saveAndFlush(newData);
 
@@ -111,6 +119,7 @@ public class SpasSensorServiceImpl implements SpasSensorService {
             LOG.info("Get Data From Sensors API : End at {}", LocalDate.now());
         } catch (Exception e) {
             throw new RuntimeException(e);
+
         }
     }
 
