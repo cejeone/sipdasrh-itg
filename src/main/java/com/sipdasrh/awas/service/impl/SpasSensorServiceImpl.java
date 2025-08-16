@@ -49,13 +49,13 @@ public class SpasSensorServiceImpl implements SpasSensorService {
     }
 
     @Override
-    @Scheduled(cron = "0 */10 * * * *")
+//    @Scheduled(cron = "0 */10 * * * *")
     public void getDataFromSensors() {
         try {
             LOG.info("Get Data From Sensors API : Start at {}", LocalDate.now());
             List<SpasArrInstall> spasArrLogList = spasArrInstallRepository.findAll();
 
-            String arcgisToken = getAccessTokenFromGis();
+//            String arcgisToken = getAccessTokenFromGis();
             spasArrLogList.forEach(spasArrLog -> {
                 LOG.info("Get Data From Sensors API : Sensor {}", spasArrLog.getNamaInstalasi());
                 String res = restTemplate.getForObject(spasArrLog.getUrlInstalasi(), String.class);
@@ -70,23 +70,33 @@ public class SpasSensorServiceImpl implements SpasSensorService {
                     // Start Parsing JSON from IoT
                     Map<String, Object> sensorDetail = (Map<String, Object>) sensorData.get("sensor");
                     Map<String, Object> waterLevel = (Map<String, Object>) sensorDetail.get("Water Level");
-                    Double waterLevelInteger = (Double) waterLevel.get("value_actual");
+                    Double waterLevelInteger = 0.0;
+                    if(waterLevel.get("value_actual") instanceof Integer) {
+                        Integer tempWaterLevelInteger = (Integer) waterLevel.get("value_actual");
+                        if(tempWaterLevelInteger != 0)
+                            waterLevelInteger = tempWaterLevelInteger.doubleValue();
+                    } else {
+                        waterLevelInteger = (double) waterLevel.get("value_actual");
+                    }
 
                     Map<String, Object> batteryDetail = (Map<String, Object>) sensorDetail.get("Battery");
                     Double batteryLevelInteger = 0.0;
                     if(batteryDetail.get("value_actual") instanceof Integer) {
                         Integer tempBatteryLevelInteger = (Integer) batteryDetail.get("value_actual");
                         if(tempBatteryLevelInteger != 0)
-                            batteryLevelInteger = (Double) batteryDetail.get("value_actual");
+                            batteryLevelInteger = tempBatteryLevelInteger.doubleValue();
+                    } else {
+                        batteryLevelInteger = (double) batteryDetail.get("value_actual");
                     }
-                    batteryLevelInteger = (Double) batteryDetail.get("value_actual");
 
                     Map<String, Object> rainDetail = (Map<String, Object>) sensorDetail.get("Rainfall");
                     Double rainLevelInteger = 0.0;
                     if(rainDetail.get("value_actual") instanceof Integer) {
                         Integer tempRainLevelInteger = (Integer) rainDetail.get("value_actual");
                         if(tempRainLevelInteger != 0)
-                            rainLevelInteger = (Double) rainDetail.get("value_actual");
+                            rainLevelInteger = tempRainLevelInteger.doubleValue();
+                    } else {
+                        rainLevelInteger = (double) rainDetail.get("value_actual");
                     }
                     // End Parsing
                     SpasArrLog newData = new SpasArrLog()
@@ -97,23 +107,23 @@ public class SpasSensorServiceImpl implements SpasSensorService {
                         .rainLevel(rainLevelInteger)
                         .waterLevel(waterLevelInteger)
                         .spasArrInstall(spasArrLog);
-                    spasArrLogRepository.saveAndFlush(newData);
+                    spasArrLogRepository.save(newData);
 
                     // Sync to Gis Service
-                    try {
-                        Boolean isSynced = postToServiceGis(
-                            spasArrLog.getUrlEwsGis(),
-                            (double) waterLevelInteger,
-                            batteryLevelInteger,
-                            spasArrLog.getThresholdInstalasi(),
-                            (double) rainLevelInteger,
-                            arcgisToken
-                        );
-                        if (isSynced) LOG.info(" Synced to GIS Service : ObjectID={}", spasArrLog.getUrlEwsGis());
-                    } catch (Exception e) {
-                        LOG.error("Error : {}", e.getMessage());
-                        throw new RuntimeException(e);
-                    }
+//                    try {
+//                        Boolean isSynced = postToServiceGis(
+//                            spasArrLog.getUrlEwsGis(),
+//                            (double) waterLevelInteger,
+//                            batteryLevelInteger,
+//                            spasArrLog.getThresholdInstalasi(),
+//                            (double) rainLevelInteger,
+//                            arcgisToken
+//                        );
+//                        if (isSynced) LOG.info(" Synced to GIS Service : ObjectID={}", spasArrLog.getUrlEwsGis());
+//                    } catch (Exception e) {
+//                        LOG.error("Error : {}", e.getMessage());
+//                        throw new RuntimeException(e);
+//                    }
                 }
             });
             LOG.info("Get Data From Sensors API : End at {}", LocalDate.now());
