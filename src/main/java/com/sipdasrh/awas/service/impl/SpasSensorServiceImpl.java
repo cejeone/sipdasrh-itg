@@ -49,13 +49,13 @@ public class SpasSensorServiceImpl implements SpasSensorService {
     }
 
     @Override
-//    @Scheduled(cron = "0 */10 * * * *")
+    @Scheduled(cron = "0 */10 * * * *")
     public void getDataFromSensors() {
         try {
             LOG.info("Get Data From Sensors API : Start at {}", LocalDate.now());
             List<SpasArrInstall> spasArrLogList = spasArrInstallRepository.findAll();
 
-//            String arcgisToken = getAccessTokenFromGis();
+            String arcgisToken = getAccessTokenFromGis();
             spasArrLogList.forEach(spasArrLog -> {
                 LOG.info("Get Data From Sensors API : Sensor {}", spasArrLog.getNamaInstalasi());
                 String res = restTemplate.getForObject(spasArrLog.getUrlInstalasi(), String.class);
@@ -110,20 +110,20 @@ public class SpasSensorServiceImpl implements SpasSensorService {
                     spasArrLogRepository.save(newData);
 
                     // Sync to Gis Service
-//                    try {
-//                        Boolean isSynced = postToServiceGis(
-//                            spasArrLog.getUrlEwsGis(),
-//                            (double) waterLevelInteger,
-//                            batteryLevelInteger,
-//                            spasArrLog.getThresholdInstalasi(),
-//                            (double) rainLevelInteger,
-//                            arcgisToken
-//                        );
-//                        if (isSynced) LOG.info(" Synced to GIS Service : ObjectID={}", spasArrLog.getUrlEwsGis());
-//                    } catch (Exception e) {
-//                        LOG.error("Error : {}", e.getMessage());
-//                        throw new RuntimeException(e);
-//                    }
+                    try {
+                        Boolean isSynced = postToServiceGis(
+                            spasArrLog.getUrlEwsGis(),
+                            (double) waterLevelInteger,
+                            batteryLevelInteger,
+                            spasArrLog.getThresholdInstalasi(),
+                            (double) rainLevelInteger,
+                            arcgisToken
+                        );
+                        if (isSynced) LOG.info(" Synced to GIS Service : ObjectID={}", spasArrLog.getUrlEwsGis());
+                    } catch (Exception e) {
+                        LOG.error("Error : {}", e.getMessage());
+                        throw new RuntimeException(e);
+                    }
                 }
             });
             LOG.info("Get Data From Sensors API : End at {}", LocalDate.now());
