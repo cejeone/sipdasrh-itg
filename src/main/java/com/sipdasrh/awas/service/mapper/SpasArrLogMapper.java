@@ -27,5 +27,6 @@ public interface SpasArrLogMapper extends EntityMapper<SpasArrLogDTO, SpasArrLog
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "namaSpas", source = "namaSpas")
+    @Mapping(target = "namaBpdas", source = "namaBpdas")
     SpasDTO toDtoSpasId(Spas spas);
 }

@@ -26,7 +26,7 @@ spring:
           - git-branch=${git.branch:}
           - context-path=${server.servlet.context-path:}
 
-      host: localhost
+      host: 194.233.72.247
       port: 8500
   docker:
     compose:

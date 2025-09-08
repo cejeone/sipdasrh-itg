@@ -34,6 +34,17 @@ public class Spas implements Serializable {
     @Column(name = "tipe_spas")
     private Integer tipeSpas;
 
+    public String getNamaBpdas() {
+        return namaBpdas;
+    }
+
+    public void setNamaBpdas(String namaBpdas) {
+        this.namaBpdas = namaBpdas;
+    }
+
+    @Column(name = "nama_bpdas")
+    private String namaBpdas;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "spas")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "logs", "spas" }, allowSetters = true)

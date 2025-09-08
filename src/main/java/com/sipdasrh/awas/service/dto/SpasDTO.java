@@ -17,6 +17,16 @@ public class SpasDTO implements Serializable {
 
     private Integer tipeSpas;
 
+    public String getNamaBpdas() {
+        return namaBpdas;
+    }
+
+    public void setNamaBpdas(String namaBpdas) {
+        this.namaBpdas = namaBpdas;
+    }
+
+    private String namaBpdas;
+
     public Long getId() {
         return id;
     }
