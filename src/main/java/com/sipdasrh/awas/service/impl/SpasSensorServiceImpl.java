@@ -175,10 +175,15 @@ public class SpasSensorServiceImpl implements SpasSensorService {
 
         // TODO: remove it in prod -> configureTrusAllSSL()
         configureTrustAllSSL();
-        ResponseEntity<String> res = restTemplate.postForEntity(baseGisUrlService, request, String.class);
-        if (res.getStatusCode().is2xxSuccessful()) {
-            LOG.info("Succesfully POST to GIS : {}", res.getBody());
-            return true;
+        ResponseEntity<String> res0 = restTemplate.postForEntity(baseGisUrlService + "/0/updateFeatures", request, String.class);
+        if (res0.getStatusCode().is2xxSuccessful()) {
+            LOG.info("Succesfully POST to GIS Layer 0 : {}", res0.getBody());
+            ResponseEntity<String> res1 = restTemplate.postForEntity(baseGisUrlService + "/1/updateFeatures", request, String.class);
+
+            if(res1.getStatusCode().is2xxSuccessful()) {
+                LOG.info("Succesfully POST to GIS Layer 1 : {}", res1.getBody());
+                return true;
+            }
         }
         return false;
     }
@@ -237,7 +242,7 @@ public class SpasSensorServiceImpl implements SpasSensorService {
             .append(ketinggian)
             .append(",\"battery\":")
             .append(voltBattery)
-            .append(",\"curah_huja\":")
+            .append(",\"curah\":")
             .append(curahHujan)
             .append("},}]");
         return stringBuilder.toString();
