@@ -23,6 +23,8 @@ public class SpasArrInstallDTO implements Serializable {
 
     private Integer urlEwsGis;
 
+    private Integer urlEwsGis1;
+
     private SpasDTO spas;
 
     public Long getId() {
@@ -81,6 +83,14 @@ public class SpasArrInstallDTO implements Serializable {
         this.urlEwsGis = urlEwsGis;
     }
 
+    public Integer getUrlEwsGis1() {
+        return urlEwsGis1;
+    }
+
+    public void setUrlEwsGis1(Integer urlEwsGis1) {
+        this.urlEwsGis1 = urlEwsGis1;
+    }
+
     public SpasDTO getSpas() {
         return spas;
     }
@@ -121,6 +131,7 @@ public class SpasArrInstallDTO implements Serializable {
             ", longInstalasi=" + getLongInstalasi() +
             ", thresholdInstalasi=" + getThresholdInstalasi() +
             ", urlEwsGis=" + getUrlEwsGis() +
+            ", urlEwsGis1=" + getUrlEwsGis1() +
             ", spas=" + getSpas() +
             "}";
     }

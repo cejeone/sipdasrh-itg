@@ -43,6 +43,9 @@ public class SpasArrInstall implements Serializable {
     @Column(name = "url_ews_gis")
     private Integer urlEwsGis;
 
+    @Column(name = "url_ews_gis_1")
+    private Integer urlEwsGis1;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "spasArrInstall")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "spasArrInstall" }, allowSetters = true)
@@ -187,6 +190,14 @@ public class SpasArrInstall implements Serializable {
     public SpasArrInstall spas(Spas spas) {
         this.setSpas(spas);
         return this;
+    }
+
+    public Integer getUrlEwsGis1() {
+        return urlEwsGis1;
+    }
+
+    public void setUrlEwsGis1(Integer urlEwsGis1) {
+        this.urlEwsGis1 = urlEwsGis1;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
