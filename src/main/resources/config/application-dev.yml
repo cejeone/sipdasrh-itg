@@ -52,7 +52,7 @@ spring:
           - git-version=${git.commit.id.describe:}
           - git-commit=${git.commit.id.abbrev:}
           - git-branch=${git.branch:}
-      host: localhost
+      host: 172.16.2.175
       port: 8500
   datasource:
     type: com.zaxxer.hikari.HikariDataSource

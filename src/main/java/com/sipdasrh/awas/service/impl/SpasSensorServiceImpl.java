@@ -113,6 +113,7 @@ public class SpasSensorServiceImpl implements SpasSensorService {
                     try {
                         Boolean isSynced = postToServiceGis(
                             spasArrLog.getUrlEwsGis(),
+                            spasArrLog.getUrlEwsGis1(),
                             (double) waterLevelInteger,
                             batteryLevelInteger,
                             spasArrLog.getThresholdInstalasi(),
@@ -159,11 +160,32 @@ public class SpasSensorServiceImpl implements SpasSensorService {
     }
 
     @Override
-    public Boolean postToServiceGis(int objectId, Double ketinggian, Double voltBattery, Double thresHold, Double curahHujan, String token)
+    public Boolean postToServiceGis(int objectId, int objectId1, Double ketinggian, Double voltBattery, Double thresHold, Double curahHujan, String token)
         throws Exception {
         LOG.info("Starting Post to GIS : {}", applicationProperties.getExternalGis().getUrlService());
         String baseGisUrlService = applicationProperties.getExternalGis().getUrlService();
-        //Set Header Authorization and Form Payload
+
+        // TODO: remove it in prod -> configureTrusAllSSL()
+        configureTrustAllSSL();
+        HttpEntity<MultiValueMap<String, String>> request = getMultiValueMapHttpEntity
+            (objectId, ketinggian, voltBattery, thresHold, curahHujan, token);
+        ResponseEntity<String> res0 = restTemplate.postForEntity(baseGisUrlService + "/0/updateFeatures", request, String.class);
+        if (res0.getStatusCode().is2xxSuccessful()) {
+            LOG.info("Succesfully POST to GIS Layer 0 : {}", res0.getBody());
+
+            HttpEntity<MultiValueMap<String, String>> request1 = getMultiValueMapHttpEntity
+                (objectId1, ketinggian, voltBattery, thresHold, curahHujan, token);
+            ResponseEntity<String> res1 = restTemplate.postForEntity(baseGisUrlService + "/1/updateFeatures", request1, String.class);
+
+            if(res1.getStatusCode().is2xxSuccessful()) {
+                LOG.info("Succesfully POST to GIS Layer 1 : {}", res1.getBody());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static HttpEntity<MultiValueMap<String, String>> getMultiValueMapHttpEntity(int objectId, Double ketinggian, Double voltBattery, Double thresHold, Double curahHujan, String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBearerAuth(token);
@@ -172,15 +194,7 @@ public class SpasSensorServiceImpl implements SpasSensorService {
         body.add("features", postBody);
         body.add("f", "pjson");
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
-
-        // TODO: remove it in prod -> configureTrusAllSSL()
-        configureTrustAllSSL();
-        ResponseEntity<String> res = restTemplate.postForEntity(baseGisUrlService, request, String.class);
-        if (res.getStatusCode().is2xxSuccessful()) {
-            LOG.info("Succesfully POST to GIS : {}", res.getBody());
-            return true;
-        }
-        return false;
+        return request;
     }
 
     /**
@@ -237,7 +251,7 @@ public class SpasSensorServiceImpl implements SpasSensorService {
             .append(ketinggian)
             .append(",\"battery\":")
             .append(voltBattery)
-            .append(",\"curah_huja\":")
+            .append(",\"curah\":")
             .append(curahHujan)
             .append("},}]");
         return stringBuilder.toString();

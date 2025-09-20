@@ -22,4 +22,5 @@
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
     <include file="config/liquibase/changelog/20250816144500_modify_entity_SpasArrLog.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20250908000001_add_nama_bpdas_to_spas.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20250919102921_add_url_ews_gis_1_to_spas_arr_install.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
