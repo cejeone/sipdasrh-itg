@@ -11,6 +11,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
@@ -46,6 +48,14 @@ public class SpasArrLogQueryService extends QueryService<SpasArrLog> {
         LOG.debug("find by criteria : {}", criteria);
         final Specification<SpasArrLog> specification = createSpecification(criteria);
         return spasArrLogMapper.toDto(spasArrLogRepository.findAll(specification));
+    }
+
+
+    @Transactional(readOnly = true)
+    public Page<SpasArrLogDTO> findPagesByCriteria(SpasArrLogCriteria criteria, Pageable page) {
+        LOG.debug("find by criteria : {}, page: {}", criteria, page);
+        final Specification<SpasArrLog> specification = createSpecification(criteria);
+        return spasArrLogRepository.findAll(specification, page).map(spasArrLogMapper::toDto);
     }
 
     /**
