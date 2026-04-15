@@ -7,7 +7,7 @@ spring:
     consul:
       discovery:
         prefer-ip-address: true
-      host: 172.16.2.175
+      host: 172.16.3.82
       port: 8500
       config:
         fail-fast: true
