@@ -244,7 +244,7 @@ jhipster:
 
 application:
   externalGis:
-    userName: PublisherSIPDASRH
-    password: P4blish3rSIPDASRH
-    urlToken: https://172.16.2.120/portal/sharing/rest/generateToken?f=json&referer=localhost:3000
-    urlService: https://172.16.2.120/server/rest/services/AWAS/FeatureServer
+    userName: sipdasrh
+    password: pdasrhPdAsRH!@2025
+    urlToken: https://geoportal.pdasrh.kehutanan.go.id/portal/sharing/rest/generateToken?f=json&expiration=43200&referer=localhost:3002
+    urlService: https://geoportal.pdasrh.kehutanan.go.id/server/rest/services/PEPDAS/PEPDAS_PETA_AWAS/FeatureServer
