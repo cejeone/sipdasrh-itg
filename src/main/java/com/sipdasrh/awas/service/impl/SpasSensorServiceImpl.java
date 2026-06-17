@@ -267,9 +267,9 @@ public class SpasSensorServiceImpl implements SpasSensorService {
 //        if (threshold - ketinggian > 10) return "aman";
 //        if ((threshold - ketinggian <= 10) && (threshold - ketinggian >= 0)) return "hati-hati";
 //        if (threshold - ketinggian < 0) return "siaga";
-        if (ketinggian < 50) return "aman";
-        if (ketinggian > 51 && ketinggian < 61) return "hati-hati";
-        if (ketinggian > 60) return "siaga";
+        if (ketinggian < 50) return "AMAN";
+        if (ketinggian > 51 && ketinggian < 61) return "HATI-HATI";
+        if (ketinggian > 60) return "SIAGA";
 
         return "tidak terdeteksi";
     }
