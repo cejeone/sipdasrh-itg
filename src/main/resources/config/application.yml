@@ -247,4 +247,4 @@ application:
     userName: PublisherSIPDASRH
     password: P4blish3rSIPDASRH
     urlToken: https://geoportal.pdasrh.kehutanan.go.id/portal/sharing/rest/generateToken?f=json&expiration=43200&referer=localhost:3002
-    urlService: https://geoportal.pdasrh.kehutanan.go.id/server/rest/services/PEPDAS/PEPDAS_PETA_AWAS/FeatureServer
+    urlService: https://geoportal.pdasrh.kehutanan.go.id/server/rest/services/Hosted/PEPDAS_PETA_AWAS_PT_VT/FeatureServer
